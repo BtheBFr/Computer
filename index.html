@@ -215,7 +215,6 @@
   const revQ3 = document.getElementById('revQ3');
   const revQ4 = document.getElementById('revQ4');
 
-  // УЛУЧШЕННОЕ ОПРЕДЕЛЕНИЕ УСТРОЙСТВА
   function detectDevice() {
     const ua = navigator.userAgent;
 
@@ -227,7 +226,6 @@
       if (m) {
         let androidVersion = m[1];
         let model = m[2].trim();
-        // Если браузер скрыл модель (часто пишет просто "K")
         if (model === 'K' || model.length < 2) {
           return 'Android ' + androidVersion + ' (модель скрыта)';
         }
@@ -297,7 +295,7 @@
     });
   });
 
-  // ТВОЯ ИДЕАЛЬНАЯ ЛОГИКА
+  // ИСПРАВЛЕННАЯ ЛОГИКА (Андроид стирает Телефонщика)
   function calcResult(q1, q2, q3, q4) {
     let result = [];
 
@@ -309,9 +307,11 @@
       result = result.filter(t => t !== tag);
     }
 
+    // 1. Базовый выбор
     if (q1 === 'Компьютер') add('Компьютерщик');
     if (q1 === 'Телефон') add('Телефонщик');
 
+    // 2. Экосистема
     if (q3 === 'Виндовс') {
       add('Компьютерщик');
     } else if (q3 === 'Линукс' || q3 === 'Эпл') {
@@ -322,17 +322,21 @@
       add('Даунщик');
     } else if (q3 === 'Андроид') {
       add('Андроидщик');
+      // ВОТ ТУТ ГЛАВНЫЙ ФИКС: Если Андроид, убираем Телефонщика
+      remove('Телефонщик'); 
     }
 
+    // 3. Ютуб
     if (q2 === 'Да') {
       add('ВПНщик');
     }
 
+    // 4. Учитель
     if (q4 === 'Ступаков') {
       add('Компьютерщик');
     } else if (q4 === 'Алиева') {
       if (q3 === 'Андроид') {
-        remove('Андроидщик');
+        remove('Андроидщик'); // Убираем Андроидщика, если Алиева
       }
       add('Телефонщик');
     }
@@ -387,7 +391,6 @@
     }
   });
 
-  // ИСПРАВЛЕННЫЙ ШАРИНГ (Заглавные буквы как ты просил)
   document.getElementById('shareBtn').addEventListener('click', async () => {
     const shareText = `Я прошел тест на сайте ${SITE_URL}\nПройди и ты!\nМой результат: Я ${finalResultTitle}`;
     
