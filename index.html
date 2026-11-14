@@ -94,7 +94,6 @@
   button:hover { transform: translateY(-2px); filter: brightness(1.1); }
   button:active { transform: translateY(0); }
   
-  /* Кнопки на экране результатов */
   .btn-secondary {
     background: rgba(148, 163, 184, 0.1);
     color: #e5e7eb;
@@ -119,7 +118,6 @@
   }
   .result-name { color: #94a3b8; font-size: 15px; margin-bottom: 4px; }
   
-  /* Блок с ответами */
   .answers-review {
     display: none;
     background: rgba(2, 6, 23, 0.5);
@@ -137,7 +135,6 @@
   <main class="card">
     <div class="progress"><div class="progress-bar" id="progressBar"></div></div>
 
-    <!-- Шаг 0: Имя -->
     <section class="step active" data-step="0">
       <h1>Кто ты?</h1>
       <input id="nameInput" type="text" placeholder="Введи своё имя" maxlength="40" autocomplete="off">
@@ -145,7 +142,6 @@
       <div class="status" id="status0" style="color: #f87171; text-align: center; margin-top: 10px; font-size: 14px;"></div>
     </section>
 
-    <!-- Шаг 1 -->
     <section class="step" data-step="1">
       <p class="qtitle">1. Компьютер или телефон?</p>
       <div class="options" data-name="q1">
@@ -154,7 +150,6 @@
       </div>
     </section>
 
-    <!-- Шаг 2 -->
     <section class="step" data-step="2">
       <p class="qtitle">2. Смотришь ШГШ или Герасева на YouTube?</p>
       <div class="options" data-name="q2">
@@ -163,7 +158,6 @@
       </div>
     </section>
 
-    <!-- Шаг 3 -->
     <section class="step" data-step="3">
       <p class="qtitle">3. Какая экосистема нравится больше?</p>
       <div class="options" data-name="q3">
@@ -175,7 +169,6 @@
       </div>
     </section>
 
-    <!-- Шаг 4 -->
     <section class="step" data-step="4">
       <p class="qtitle">4. Ступаков или Алиева?</p>
       <div class="options" data-name="q4">
@@ -184,12 +177,10 @@
       </div>
     </section>
 
-    <!-- Шаг 5: Результат -->
     <section class="step" data-step="5">
       <div class="result-name" id="resName"></div>
       <div class="result-title" id="resTitle"></div>
       
-      <!-- Скрытый блок с ответами -->
       <div class="answers-review" id="answersReview">
         <p>1. Компьютер или телефон? <b id="revQ1"></b></p>
         <p>2. Смотришь ШГШ или Герасева? <b id="revQ2"></b></p>
@@ -205,7 +196,7 @@
 
 <script>
   const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwAKZi_RTLp1hBFSD1S6SM6VnhQuIDcmujICnGYpqNqS3NSAB-dRYaQVirINNAxVKPd8g/exec';
-  const SITE_URL = 'https://bthebfr.github.io/Computer/'; // Твоя ссылка
+  const SITE_URL = 'https://bthebfr.github.io/Computer/';
 
   const answers = { name: '', q1: '', q2: '', q3: '', q4: '' };
   const totalQuestions = 4;
@@ -214,11 +205,9 @@
   const progressBar = document.getElementById('progressBar');
   const nameInput = document.getElementById('nameInput');
   const startBtn = document.getElementById('startBtn');
-  
   const resName = document.getElementById('resName');
   const resTitle = document.getElementById('resTitle');
   
-  // Элементы блока ответов
   const answersReview = document.getElementById('answersReview');
   const showAnswersBtn = document.getElementById('showAnswersBtn');
   const revQ1 = document.getElementById('revQ1');
@@ -286,27 +275,37 @@
     });
   });
 
-  // Логика подсчета (используем русские значения)
+  // ЖЕСТКАЯ ЛОГИКА ПО ТВОИМ ПРАВИЛАМ
   function calcResult(q1, q2, q3, q4) {
-    if (q1 === 'Компьютер' && q2 === 'Да' && (q3 === 'Виндовс' || q3 === 'Линукс') && q4 === 'Ступаков') {
-      return 'Компьютерщик-ВПНщик';
-    }
-    if (q1 === 'Телефон' && q2 === 'Нет' && q3 === 'Виндовс' && q4 === 'Ступаков') {
-      return 'Андроидщик-Компьютерщик';
-    }
+    let baseResult = "";
+
+    // Шаг 1: Определяем базу по экосистеме (q3) и 4-му вопросу (q4)
     if (q3 === 'Андроид') {
-      return 'Андроидщик';
+      if (q4 === 'Ступаков') {
+        baseResult = 'Компьютерщик-Андроидщик';
+      } else if (q4 === 'Алиева') {
+        baseResult = 'Телефонщик';
+      } else {
+        baseResult = 'Андроидщик';
+      }
+    } 
+    else if (q3 === 'Виндовс') {
+      baseResult = 'Компьютерщик';
+    } 
+    else if (q3 === 'Линукс' || q3 === 'Эпл') {
+      baseResult = 'Компьютерщик-Даунщик';
+    } 
+    else if (q3 === 'Айфон') {
+      baseResult = 'Телефонщик-Даунщик';
     }
-    if (q3 === 'Айфон' || q3 === 'Эпл') {
-      return 'Эплщик';
-    }
+
+    // Шаг 2: Если смотрит ютуб (Да) - всегда клеим ВПНщика в конец
     if (q2 === 'Да') {
-      return 'ВПНщик';
+      if (baseResult.includes('ВПНщик')) return baseResult; // защита от дублей
+      baseResult += '-ВПНщик';
     }
-    if (q1 === 'Компьютер' && (q3 === 'Виндовс' || q3 === 'Линукс')) {
-      return 'Компьютерщик';
-    }
-    return 'Андроидщик';
+
+    return baseResult;
   }
 
   let finalResultTitle = '';
@@ -318,7 +317,6 @@
     resName.textContent = 'Имя: ' + answers.name;
     resTitle.textContent = 'Ты ' + resTitleText;
     
-    // Заполняем скрытые ответы
     revQ1.textContent = answers.q1;
     revQ2.textContent = answers.q2;
     revQ3.textContent = answers.q3;
@@ -326,7 +324,6 @@
 
     goTo(5);
 
-    // Отправка в таблицу
     try {
       await fetch(SCRIPT_URL, {
         method: 'POST',
@@ -348,7 +345,6 @@
     }
   }
 
-  // Показать / Скрыть ответы
   showAnswersBtn.addEventListener('click', () => {
     if (answersReview.style.display === 'block') {
       answersReview.style.display = 'none';
@@ -359,7 +355,6 @@
     }
   });
 
-  // Поделиться
   document.getElementById('shareBtn').addEventListener('click', async () => {
     const shareText = `Я прошел тест на сайте ${SITE_URL}\nпройди и ты.\nмой результат: я ${finalResultTitle.toLowerCase()}`;
     
@@ -374,7 +369,6 @@
         console.log('Поделиться отменено');
       }
     } else {
-      // Запасной вариант для ПК (копирует в буфер обмена)
       try {
         await navigator.clipboard.writeText(shareText);
         alert('Текст скопирован в буфер обмена!\n\n' + shareText);
@@ -384,7 +378,6 @@
     }
   });
 
-  // Перезапуск
   document.getElementById('restartBtn').addEventListener('click', () => {
     answers.name = ''; answers.q1 = ''; answers.q2 = ''; answers.q3 = ''; answers.q4 = '';
     nameInput.value = '';
