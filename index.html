@@ -35,13 +35,12 @@
     transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
   }
   h1 {
-    margin: 0 0 8px;
+    margin: 0 0 24px;
     font-size: clamp(28px, 5vw, 44px);
     line-height: 1.05;
     background: linear-gradient(90deg, #60a5fa, #a78bfa, #f472b6);
     -webkit-background-clip: text; background-clip: text; color: transparent;
   }
-  .subtitle { margin: 0 0 24px; color: #94a3b8; font-size: 16px; }
   .qtitle {
     font-size: 24px; font-weight: 700;
     margin: 0 0 20px; color: #f1f5f9;
@@ -94,8 +93,15 @@
   }
   button:hover { transform: translateY(-2px); filter: brightness(1.1); }
   button:active { transform: translateY(0); }
-  button:disabled { opacity: 0.6; cursor: wait; transform: none; }
   
+  /* Кнопки на экране результатов */
+  .btn-secondary {
+    background: rgba(148, 163, 184, 0.1);
+    color: #e5e7eb;
+    border: 1px solid rgba(148, 163, 184, 0.3);
+  }
+  .btn-secondary:hover { background: rgba(148, 163, 184, 0.2); }
+
   .step { display: none; }
   .step.active { display: block; animation: fade 0.3s ease; }
   @keyframes fade {
@@ -105,26 +111,26 @@
   
   .result-title {
     font-size: clamp(28px, 5vw, 42px);
-    margin: 10px 0 12px;
+    margin: 10px 0 24px;
     background: linear-gradient(90deg, #60a5fa, #a78bfa, #f472b6);
     -webkit-background-clip: text; background-clip: text; color: transparent;
     font-weight: 900;
     line-height: 1.1;
   }
-  .result-desc { color: #cbd5e1; font-size: 16px; margin: 0 0 20px; line-height: 1.5; }
   .result-name { color: #94a3b8; font-size: 15px; margin-bottom: 4px; }
-  .result-device { color: #64748b; font-size: 14px; margin-bottom: 10px; }
-  .status { margin-top: 16px; font-size: 14px; text-align: center; min-height: 20px; font-weight: 500; }
-  .status.err { color: #f87171; }
-  .status.ok { color: #4ade80; }
   
-  .back {
-    background: transparent; color: #94a3b8;
-    font-weight: 600; font-size: 14px;
-    padding: 10px; margin-top: 10px; width: auto;
+  /* Блок с ответами */
+  .answers-review {
+    display: none;
+    background: rgba(2, 6, 23, 0.5);
     border: 1px solid rgba(148, 163, 184, 0.2);
+    border-radius: 16px;
+    padding: 16px;
+    margin-bottom: 20px;
   }
-  .back:hover { color: #e5e7eb; background: rgba(255,255,255,0.05); transform: none; filter: none; }
+  .answers-review p { margin: 0 0 10px; color: #cbd5e1; font-size: 15px; }
+  .answers-review p:last-child { margin: 0; }
+  .answers-review b { color: #a78bfa; }
 </style>
 </head>
 <body>
@@ -134,18 +140,17 @@
     <!-- Шаг 0: Имя -->
     <section class="step active" data-step="0">
       <h1>Кто ты?</h1>
-      <p class="subtitle">Как тебя зовут? Модель устройства определим сами.</p>
-      <input id="nameInput" type="text" placeholder="Твоё имя" maxlength="40" autocomplete="off">
+      <input id="nameInput" type="text" placeholder="Введи своё имя" maxlength="40" autocomplete="off">
       <button id="startBtn">Начать</button>
-      <div class="status" id="status0"></div>
+      <div class="status" id="status0" style="color: #f87171; text-align: center; margin-top: 10px; font-size: 14px;"></div>
     </section>
 
     <!-- Шаг 1 -->
     <section class="step" data-step="1">
       <p class="qtitle">1. Компьютер или телефон?</p>
       <div class="options" data-name="q1">
-        <div class="opt" data-value="computer">Компьютер</div>
-        <div class="opt" data-value="phone">Телефон</div>
+        <div class="opt" data-value="Компьютер">Компьютер</div>
+        <div class="opt" data-value="Телефон">Телефон</div>
       </div>
     </section>
 
@@ -153,8 +158,8 @@
     <section class="step" data-step="2">
       <p class="qtitle">2. Смотришь ШГШ или Герасева на YouTube?</p>
       <div class="options" data-name="q2">
-        <div class="opt" data-value="yes">Да</div>
-        <div class="opt" data-value="no">Нет</div>
+        <div class="opt" data-value="Да">Да</div>
+        <div class="opt" data-value="Нет">Нет</div>
       </div>
     </section>
 
@@ -162,11 +167,11 @@
     <section class="step" data-step="3">
       <p class="qtitle">3. Какая экосистема нравится больше?</p>
       <div class="options" data-name="q3">
-        <div class="opt" data-value="iphone">Айфон</div>
-        <div class="opt" data-value="apple">Эпл</div>
-        <div class="opt" data-value="windows">Виндовс</div>
-        <div class="opt" data-value="linux">Линукс</div>
-        <div class="opt" data-value="android">Андроид</div>
+        <div class="opt" data-value="Айфон">Айфон</div>
+        <div class="opt" data-value="Эпл">Эпл</div>
+        <div class="opt" data-value="Виндовс">Виндовс</div>
+        <div class="opt" data-value="Линукс">Линукс</div>
+        <div class="opt" data-value="Андроид">Андроид</div>
       </div>
     </section>
 
@@ -174,8 +179,8 @@
     <section class="step" data-step="4">
       <p class="qtitle">4. Ступаков или Алиева?</p>
       <div class="options" data-name="q4">
-        <div class="opt" data-value="stupakov">Ступаков</div>
-        <div class="opt" data-value="alieva">Алиева</div>
+        <div class="opt" data-value="Ступаков">Ступаков</div>
+        <div class="opt" data-value="Алиева">Алиева</div>
       </div>
     </section>
 
@@ -183,16 +188,24 @@
     <section class="step" data-step="5">
       <div class="result-name" id="resName"></div>
       <div class="result-title" id="resTitle"></div>
-      <p class="result-desc" id="resDesc"></p>
-      <div class="result-device" id="resDevice"></div>
-      <div class="status" id="statusFinal"></div>
-      <button class="back" id="restartBtn">Пройти заново</button>
+      
+      <!-- Скрытый блок с ответами -->
+      <div class="answers-review" id="answersReview">
+        <p>1. Компьютер или телефон? <b id="revQ1"></b></p>
+        <p>2. Смотришь ШГШ или Герасева? <b id="revQ2"></b></p>
+        <p>3. Экосистема? <b id="revQ3"></b></p>
+        <p>4. Ступаков или Алиева? <b id="revQ4"></b></p>
+      </div>
+
+      <button id="showAnswersBtn" class="btn-secondary">Показать мои ответы</button>
+      <button id="shareBtn">Поделиться результатом</button>
+      <button id="restartBtn" class="btn-secondary">Пройти заново</button>
     </section>
   </main>
 
 <script>
-  // URL твоего развернутого Apps Script
   const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwAKZi_RTLp1hBFSD1S6SM6VnhQuIDcmujICnGYpqNqS3NSAB-dRYaQVirINNAxVKPd8g/exec';
+  const SITE_URL = 'https://bthebfr.github.io/Computer/'; // Твоя ссылка
 
   const answers = { name: '', q1: '', q2: '', q3: '', q4: '' };
   const totalQuestions = 4;
@@ -201,21 +214,22 @@
   const progressBar = document.getElementById('progressBar');
   const nameInput = document.getElementById('nameInput');
   const startBtn = document.getElementById('startBtn');
-  const status0 = document.getElementById('status0');
   
   const resName = document.getElementById('resName');
   const resTitle = document.getElementById('resTitle');
-  const resDesc = document.getElementById('resDesc');
-  const resDevice = document.getElementById('resDevice');
-  const statusFinal = document.getElementById('statusFinal');
-  const restartBtn = document.getElementById('restartBtn');
+  
+  // Элементы блока ответов
+  const answersReview = document.getElementById('answersReview');
+  const showAnswersBtn = document.getElementById('showAnswersBtn');
+  const revQ1 = document.getElementById('revQ1');
+  const revQ2 = document.getElementById('revQ2');
+  const revQ3 = document.getElementById('revQ3');
+  const revQ4 = document.getElementById('revQ4');
 
-  // Определение устройства
   function detectDevice() {
     const ua = navigator.userAgent;
     if (/iPhone/.test(ua)) return 'iPhone';
     if (/iPad/.test(ua)) return 'iPad';
-    if (/iPod/.test(ua)) return 'iPod';
     if (/Android/.test(ua)) {
       let m = ua.match(/Android [\d.]+;\s*(?:[a-z]{2}[-_][a-z]{2};\s*)?([^;)]+?)(?:\s+Build|\))/i);
       let model = m && m[1] ? m[1].trim() : '';
@@ -224,13 +238,11 @@
     }
     if (/Windows NT/.test(ua)) return 'Windows PC';
     if (/Macintosh|Mac OS X/.test(ua)) return 'Mac';
-    if (/CrOS/.test(ua)) return 'Chromebook';
     if (/Linux/.test(ua)) return 'Linux PC';
     return 'Неизвестное устройство';
   }
   const DEVICE = detectDevice();
 
-  // Переключение шагов
   function goTo(step) {
     steps.forEach(s => s.classList.toggle('active', Number(s.dataset.step) === step));
     let pct = 0;
@@ -239,16 +251,14 @@
     progressBar.style.width = pct + '%';
   }
 
-  // Старт (ввод имени)
   startBtn.addEventListener('click', () => {
     const name = nameInput.value.trim();
     if (!name) {
-      status0.textContent = 'Пожалуйста, введи имя.';
-      status0.className = 'status err';
+      document.getElementById('status0').textContent = 'Пожалуйста, введи имя.';
       return;
     }
     answers.name = name;
-    status0.textContent = '';
+    document.getElementById('status0').textContent = '';
     goTo(1);
   });
 
@@ -256,17 +266,14 @@
     if (e.key === 'Enter') startBtn.click();
   });
 
-  // Обработка кликов по вариантам
   document.querySelectorAll('.options').forEach(group => {
     const qKey = group.dataset.name;
     group.querySelectorAll('.opt').forEach(opt => {
       opt.addEventListener('click', () => {
-        // Визуальное выделение
         group.querySelectorAll('.opt').forEach(o => o.classList.remove('selected'));
         opt.classList.add('selected');
         answers[qKey] = opt.dataset.value;
 
-        // Задержка для красоты и автопереход
         setTimeout(() => {
           const stepNum = Number(group.closest('.step').dataset.step);
           if (stepNum < 4) {
@@ -279,42 +286,47 @@
     });
   });
 
-  // Подсчет результатов
+  // Логика подсчета (используем русские значения)
   function calcResult(q1, q2, q3, q4) {
-    if (q1 === 'computer' && q2 === 'yes' && (q3 === 'windows' || q3 === 'linux') && q4 === 'stupakov') {
-      return { title: 'Компьютерщик-ВПНщик', desc: 'ПК, YouTube через VPN и любимая ОС — Windows/Linux. Ты в своей стихии.' };
+    if (q1 === 'Компьютер' && q2 === 'Да' && (q3 === 'Виндовс' || q3 === 'Линукс') && q4 === 'Ступаков') {
+      return 'Компьютерщик-ВПНщик';
     }
-    if (q1 === 'phone' && q2 === 'no' && q3 === 'windows' && q4 === 'stupakov') {
-      return { title: 'Андроидщик-Компьютерщик', desc: 'Телефон в руке, но душа тянется к ПК и Windows.' };
+    if (q1 === 'Телефон' && q2 === 'Нет' && q3 === 'Виндовс' && q4 === 'Ступаков') {
+      return 'Андроидщик-Компьютерщик';
     }
-    if (q3 === 'android') {
-      return { title: 'Андроидщик', desc: 'Android — твоя экосистема. Кастомизация, root, свобода.' };
+    if (q3 === 'Андроид') {
+      return 'Андроидщик';
     }
-    if (q3 === 'iphone' || q3 === 'apple') {
-      return { title: 'Эплщик', desc: 'Экосистема Apple: iCloud, Mac, iPhone — всё синхронно.' };
+    if (q3 === 'Айфон' || q3 === 'Эпл') {
+      return 'Эплщик';
     }
-    if (q2 === 'yes') {
-      return { title: 'ВПНщик', desc: 'YouTube — твой дом. Без VPN никуда.' };
+    if (q2 === 'Да') {
+      return 'ВПНщик';
     }
-    if (q1 === 'computer' && (q3 === 'windows' || q3 === 'linux')) {
-      return { title: 'Компьютерщик', desc: 'ПК — твой инструмент. Windows или Linux — не важно, главное мощь.' };
+    if (q1 === 'Компьютер' && (q3 === 'Виндовс' || q3 === 'Линукс')) {
+      return 'Компьютерщик';
     }
-    return { title: 'Андроидщик', desc: 'Android — твой выбор по умолчанию.' };
+    return 'Андроидщик';
   }
 
-  // Завершение и отправка
+  let finalResultTitle = '';
+
   async function finish() {
-    const res = calcResult(answers.q1, answers.q2, answers.q3, answers.q4);
+    const resTitleText = calcResult(answers.q1, answers.q2, answers.q3, answers.q4);
+    finalResultTitle = resTitleText;
 
     resName.textContent = 'Имя: ' + answers.name;
-    resTitle.textContent = 'Ты ' + res.title;
-    resDesc.textContent = res.desc;
-    resDevice.textContent = 'Твоё устройство: ' + DEVICE;
+    resTitle.textContent = 'Ты ' + resTitleText;
     
-    statusFinal.textContent = 'Сохраняем в таблицу...';
-    statusFinal.className = 'status';
+    // Заполняем скрытые ответы
+    revQ1.textContent = answers.q1;
+    revQ2.textContent = answers.q2;
+    revQ3.textContent = answers.q3;
+    revQ4.textContent = answers.q4;
+
     goTo(5);
 
+    // Отправка в таблицу
     try {
       await fetch(SCRIPT_URL, {
         method: 'POST',
@@ -327,25 +339,58 @@
           q2: answers.q2,
           q3: answers.q3,
           q4: answers.q4,
-          result: res.title,
+          result: resTitleText,
           userAgent: navigator.userAgent
         })
       });
-      statusFinal.textContent = 'Сохранено ✅';
-      statusFinal.className = 'status ok';
     } catch (err) {
-      statusFinal.textContent = 'Ошибка сохранения (проверь скрипт)';
-      statusFinal.className = 'status err';
-      console.error(err);
+      console.error('Ошибка сохранения', err);
     }
   }
 
+  // Показать / Скрыть ответы
+  showAnswersBtn.addEventListener('click', () => {
+    if (answersReview.style.display === 'block') {
+      answersReview.style.display = 'none';
+      showAnswersBtn.textContent = 'Показать мои ответы';
+    } else {
+      answersReview.style.display = 'block';
+      showAnswersBtn.textContent = 'Скрыть ответы';
+    }
+  });
+
+  // Поделиться
+  document.getElementById('shareBtn').addEventListener('click', async () => {
+    const shareText = `Я прошел тест на сайте ${SITE_URL}\nпройди и ты.\nмой результат: я ${finalResultTitle.toLowerCase()}`;
+    
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: 'Кто ты? Тест',
+          text: shareText,
+          url: SITE_URL
+        });
+      } catch (err) {
+        console.log('Поделиться отменено');
+      }
+    } else {
+      // Запасной вариант для ПК (копирует в буфер обмена)
+      try {
+        await navigator.clipboard.writeText(shareText);
+        alert('Текст скопирован в буфер обмена!\n\n' + shareText);
+      } catch (err) {
+        alert('Не удалось скопировать. Вот ваш текст:\n\n' + shareText);
+      }
+    }
+  });
+
   // Перезапуск
-  restartBtn.addEventListener('click', () => {
+  document.getElementById('restartBtn').addEventListener('click', () => {
     answers.name = ''; answers.q1 = ''; answers.q2 = ''; answers.q3 = ''; answers.q4 = '';
     nameInput.value = '';
     document.querySelectorAll('.opt').forEach(o => o.classList.remove('selected'));
-    statusFinal.textContent = '';
+    answersReview.style.display = 'none';
+    showAnswersBtn.textContent = 'Показать мои ответы';
     goTo(0);
   });
 </script>
