@@ -217,7 +217,6 @@
 
   function detectDevice() {
     const ua = navigator.userAgent;
-
     if (/iPhone/.test(ua)) return 'iPhone';
     if (/iPad/.test(ua)) return 'iPad';
 
@@ -247,7 +246,6 @@
     }
 
     if (/Linux/.test(ua) && !/Android/.test(ua)) return 'Linux PC';
-    
     return 'Неизвестное устройство';
   }
   const DEVICE = detectDevice();
@@ -295,51 +293,46 @@
     });
   });
 
-  // ИСПРАВЛЕННАЯ ЛОГИКА (Андроид стирает Телефонщика)
+  // НОВАЯ, ИДЕАЛЬНАЯ ЛОГИКА
   function calcResult(q1, q2, q3, q4) {
     let result = [];
 
-    function add(tag) {
-      if (!result.includes(tag)) result.push(tag);
-    }
-
-    function remove(tag) {
-      result = result.filter(t => t !== tag);
-    }
-
-    // 1. Базовый выбор
-    if (q1 === 'Компьютер') add('Компьютерщик');
-    if (q1 === 'Телефон') add('Телефонщик');
+    // 1. Первый вопрос
+    if (q1 === 'Компьютер') result.push('Компьютерщик');
+    if (q1 === 'Телефон') result.push('Телефонщик');
 
     // 2. Экосистема
     if (q3 === 'Виндовс') {
-      add('Компьютерщик');
+      if (!result.includes('Компьютерщик')) result.push('Компьютерщик');
     } else if (q3 === 'Линукс' || q3 === 'Эпл') {
-      add('Компьютерщик');
-      add('Даунщик');
+      if (!result.includes('Компьютерщик')) result.push('Компьютерщик');
+      if (!result.includes('Даунщик')) result.push('Даунщик');
     } else if (q3 === 'Айфон') {
-      add('Телефонщик');
-      add('Даунщик');
+      if (!result.includes('Телефонщик')) result.push('Телефонщик');
+      if (!result.includes('Даунщик')) result.push('Даунщик');
     } else if (q3 === 'Андроид') {
-      add('Андроидщик');
-      // ВОТ ТУТ ГЛАВНЫЙ ФИКС: Если Андроид, убираем Телефонщика
-      remove('Телефонщик'); 
+      result.push('Андроидщик');
     }
 
-    // 3. Ютуб
-    if (q2 === 'Да') {
-      add('ВПНщик');
-    }
-
-    // 4. Учитель
+    // 3. Четвертый вопрос (Учитель)
     if (q4 === 'Ступаков') {
-      add('Компьютерщик');
+      if (!result.includes('Компьютерщик')) result.push('Компьютерщик');
     } else if (q4 === 'Алиева') {
-      if (q3 === 'Андроид') {
-        remove('Андроидщик'); // Убираем Андроидщика, если Алиева
-      }
-      add('Телефонщик');
+      if (!result.includes('Телефонщик')) result.push('Телефонщик');
     }
+
+    // 4. Второй вопрос (Ютуб)
+    if (q2 === 'Да') {
+      result.push('ВПНщик');
+    }
+
+    // ГЛАВНОЕ ПРАВИЛО: Если есть Андроидщик, то Телефонщика быть не должно
+    if (result.includes('Андроидщик')) {
+      result = result.filter(item => item !== 'Телефонщик');
+    }
+
+    // Убираем дубликаты (если вдруг где-то задвоилось)
+    result = [...new Set(result)];
 
     return result.join('-');
   }
