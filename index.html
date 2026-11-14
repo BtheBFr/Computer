@@ -1,1 +1,255 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Кто ты? Тест</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; min-height: 100vh;
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    background: radial-gradient(circle at top left, #1e3a8a, #0f172a 45%, #020617);
+    color: #e5e7eb;
+    display: flex; align-items: center; justify-content: center;
+    padding: 24px;
+  }
+  .card {
+    width: 100%; max-width: 760px;
+    background: rgba(15, 23, 42, 0.86);
+    border: 1px solid rgba(148, 163, 184, 0.25);
+    border-radius: 24px;
+    padding: 28px;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.45);
+    backdrop-filter: blur(12px);
+  }
+  h1 {
+    margin: 0 0 8px;
+    font-size: clamp(28px, 5vw, 44px);
+    line-height: 1.05;
+    background: linear-gradient(90deg, #60a5fa, #a78bfa, #f472b6);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .subtitle { margin: 0 0 24px; color: #94a3b8; font-size: 16px; }
+  fieldset {
+    border: 1px solid rgba(148, 163, 184, 0.22);
+    border-radius: 16px;
+    padding: 16px; margin: 0 0 14px;
+    background: rgba(2, 6, 23, 0.35);
+  }
+  legend { padding: 0 8px; color: #cbd5e1; font-weight: 700; }
+  .options { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px; }
+  label.option {
+    position: relative; display: inline-flex; align-items: center; gap: 8px;
+    padding: 10px 14px; border-radius: 999px;
+    border: 1px solid rgba(148, 163, 184, 0.35);
+    background: rgba(15, 23, 42, 0.8);
+    cursor: pointer; user-select: none;
+    transition: 0.18s ease;
+  }
+  label.option:hover { border-color: #60a5fa; transform: translateY(-1px); }
+  label.option input { accent-color: #60a5fa; }
+  label.option:has(input:checked) {
+    border-color: #a78bfa;
+    background: linear-gradient(135deg, rgba(96,165,250,0.25), rgba(167,139,250,0.25));
+    box-shadow: 0 0 0 1px rgba(167,139,250,0.35);
+  }
+  .phone-wrap { margin: 0 0 14px; }
+  .phone-label { display: block; margin: 0 0 6px; color: #cbd5e1; font-weight: 700; }
+  input[type="tel"] {
+    width: 100%; padding: 12px 14px;
+    border-radius: 14px;
+    border: 1px solid rgba(148, 163, 184, 0.35);
+    background: rgba(2, 6, 23, 0.6);
+    color: #e5e7eb;
+    font-size: 16px;
+    outline: none;
+    transition: 0.18s ease;
+  }
+  input[type="tel"]:focus {
+    border-color: #60a5fa;
+    box-shadow: 0 0 0 3px rgba(96,165,250,0.2);
+  }
+  button {
+    width: 100%; margin-top: 18px;
+    padding: 14px 18px; border: 0; border-radius: 16px;
+    font-size: 17px; font-weight: 800; cursor: pointer;
+    color: #0f172a;
+    background: linear-gradient(90deg, #60a5fa, #a78bfa, #f472b6);
+    transition: 0.18s ease;
+  }
+  button:hover { transform: translateY(-2px); filter: brightness(1.08); }
+  button:active { transform: translateY(0); }
+  button:disabled { opacity: 0.6; cursor: wait; }
+  .result {
+    margin-top: 20px; padding: 18px; border-radius: 18px;
+    border: 1px solid rgba(167, 139, 250, 0.45);
+    background: linear-gradient(135deg, rgba(96,165,250,0.14), rgba(244,114,182,0.12));
+    display: none;
+  }
+  .result.show { display: block; animation: pop 0.35s ease; }
+  .result h2 { margin: 0 0 6px; font-size: 26px; color: #f8fafc; }
+  .result p { margin: 0; color: #cbd5e1; }
+  @keyframes pop {
+    from { opacity: 0; transform: scale(0.97); }
+    to { opacity: 1; transform: scale(1); }
+  }
+  .note { margin-top: 14px; font-size: 13px; color: #64748b; text-align: center; }
+  .status { margin-top: 10px; font-size: 14px; text-align: center; }
+  .status.err { color: #f87171; }
+  .status.ok { color: #4ade80; }
+</style>
+</head>
+<body>
+  <main class="card">
+    <h1>Кто ты?</h1>
+    <p class="subtitle">4 вопроса. Один вариант на каждый. Введи телефон — результат сохранится.</p>
 
+    <form id="quiz">
+      <div class="phone-wrap">
+        <label class="phone-label" for="phone">Телефон</label>
+        <input id="phone" type="tel" name="phone" placeholder="+7 999 123 45 67" required>
+      </div>
+
+      <fieldset>
+        <legend>1. Компьютер или телефон?</legend>
+        <div class="options">
+          <label class="option"><input type="radio" name="q1" value="computer" required> Компьютер</label>
+          <label class="option"><input type="radio" name="q1" value="phone" required> Телефон</label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>2. Смотришь ШГШ или Герасева на YouTube?</legend>
+        <div class="options">
+          <label class="option"><input type="radio" name="q2" value="yes" required> Да</label>
+          <label class="option"><input type="radio" name="q2" value="no" required> Нет</label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>3. Какая экосистема нравится больше?</legend>
+        <div class="options">
+          <label class="option"><input type="radio" name="q3" value="iphone" required> Айфон</label>
+          <label class="option"><input type="radio" name="q3" value="apple" required> Эпл</label>
+          <label class="option"><input type="radio" name="q3" value="windows" required> Виндовс</label>
+          <label class="option"><input type="radio" name="q3" value="linux" required> Линукс</label>
+          <label class="option"><input type="radio" name="q3" value="android" required> Андроид</label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>4. Ступаков или Алиева?</legend>
+        <div class="options">
+          <label class="option"><input type="radio" name="q4" value="stupakov" required> Ступаков</label>
+          <label class="option"><input type="radio" name="q4" value="alieva" required> Алиева</label>
+        </div>
+      </fieldset>
+
+      <button type="submit" id="submitBtn">Узнать результат</button>
+      <div class="status" id="status"></div>
+    </form>
+
+    <div class="result" id="result">
+      <h2 id="resultTitle"></h2>
+      <p id="resultText"></p>
+    </div>
+
+    <div class="note">Один вариант на вопрос. Телефон обязателен.</div>
+  </main>
+
+<script>
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwAKZi_RTLp1hBFSD1S6SM6VnhQuIDcmujICnGYpqNqS3NSAB-dRYaQVirINNAxVKPd8g/exec';
+
+  const form = document.getElementById('quiz');
+  const resultBox = document.getElementById('result');
+  const resultTitle = document.getElementById('resultTitle');
+  const resultText = document.getElementById('resultText');
+  const statusEl = document.getElementById('status');
+  const submitBtn = document.getElementById('submitBtn');
+
+  function calcResult(q1, q2, q3, q4) {
+    // 1) Компьютерщик-ВПНщик
+    if (q1 === 'computer' && q2 === 'yes' && (q3 === 'windows' || q3 === 'linux') && q4 === 'stupakov') {
+      return { title: 'Компьютерщик-ВПНщик', desc: 'ПК, YouTube через VPN и любимая ОС — Windows/Linux. Ты в своей стихии.' };
+    }
+    // 2) Андроидщик-Компьютерщик
+    if (q1 === 'phone' && q2 === 'no' && q3 === 'windows' && q4 === 'stupakov') {
+      return { title: 'Андроидщик-Компьютерщик', desc: 'Телефон в руке, но душа тянется к ПК и Windows.' };
+    }
+    // 3) Андроидщик
+    if (q3 === 'android') {
+      return { title: 'Андроидщик', desc: 'Android — твоя экосистема. Кастомизация, root, свобода.' };
+    }
+    // 4) Эплщик
+    if (q3 === 'iphone' || q3 === 'apple') {
+      return { title: 'Эплщик', desc: 'Экосистема Apple: iCloud, Mac, iPhone — всё синхронно.' };
+    }
+    // 5) ВПНщик
+    if (q2 === 'yes') {
+      return { title: 'ВПНщик', desc: 'YouTube — твой дом. Без VPN никуда.' };
+    }
+    // 6) Компьютерщик
+    if (q1 === 'computer' && (q3 === 'windows' || q3 === 'linux')) {
+      return { title: 'Компьютерщик', desc: 'ПК — твой инструмент. Windows или Linux — не важно, главное мощь.' };
+    }
+    // 7) запасной
+    return { title: 'Андроидщик', desc: 'Android — твой выбор по умолчанию.' };
+  }
+
+  function setStatus(text, cls) {
+    statusEl.textContent = text || '';
+    statusEl.className = 'status' + (cls ? ' ' + cls : '');
+  }
+
+  form.addEventListener('submit', async function (e) {
+    e.preventDefault();
+
+    const data = new FormData(form);
+    const phone = (data.get('phone') || '').trim();
+    const q1 = data.get('q1');
+    const q2 = data.get('q2');
+    const q3 = data.get('q3');
+    const q4 = data.get('q4');
+
+    if (!phone || !q1 || !q2 || !q3 || !q4) {
+      setStatus('Заполни телефон и выбери по одному варианту в каждом вопросе.', 'err');
+      return;
+    }
+
+    const res = calcResult(q1, q2, q3, q4);
+
+    resultTitle.textContent = 'Ты ' + res.title;
+    resultText.textContent = res.desc;
+    resultBox.classList.add('show');
+
+    submitBtn.disabled = true;
+    setStatus('Сохраняем…', '');
+
+    try {
+      await fetch(SCRIPT_URL, {
+        method: 'POST',
+        mode: 'cors',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({
+          phone: phone,
+          q1: q1,
+          q2: q2,
+          q3: q3,
+          q4: q4,
+          result: res.title,
+          userAgent: navigator.userAgent
+        })
+      });
+      setStatus('Сохранено ✅', 'ok');
+    } catch (err) {
+      // Даже при ошибке CORS запрос обычно доходит — предупреждаем мягко
+      setStatus('Результат показан, но сохранить не удалось (проверь развёртывание Apps Script).', 'err');
+      console.error(err);
+    } finally {
+      submitBtn.disabled = false;
+    }
+  });
+</script>
+</body>
+</html>
